@@ -1,15 +1,16 @@
 # Xero-Specflow-Web-AutomatedTests
 ## How to run automated test
-1. Download sourcecode.
-2. Install nuget packages and required sdk.
-3. Compile and build solution
-4. Specify configuration in appsettings.json
+1. Download sourcecode
+2. Open a solution using Visual Studio
+3. Install nuget packages and required sdk.
+4. Compile and build solution
+5. Specify configuration in appsettings.json
     - Username: Xero account user name
     - Password: Xero account password
     - Browser: "CHROME" or "FIREFOX"
     - FirefoxBinaryPath: by default, it is "C:\Program Files\Mozilla Firefox\firefox.exe"
-5. In Unit Test Explorer, right click on "AddANZ_NZBankAccount" test and click "Run Unit Test"
-6. Get test result including screenshots.
+6. In Unit Test Explorer, right click on "AddANZ_NZBankAccount" test and click "Run Unit Test"
+7. Get test result including screenshots.
 
 ## Exclusion due to time constrain.
  - Assertions
