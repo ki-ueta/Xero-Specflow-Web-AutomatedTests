@@ -14,8 +14,10 @@
 
 ## Exclusion due to time constrain.
  - Assertions
-    - If a default business is not exist, one should be created
-    - After adding a new account, Bank logo should be displayed on bank account details
+    - If a default business is not exist, one should be created.
+    - After adding a new account, Bank logo should be displayed on bank account details.
+    - Assert bad day scenarios.
+    - Assert duplicated bank account number can not be added. (i may not understand requirements here)
  - Test Frameworks
    - Logging 
    - For multiple scenarios/features, reusing opened browsers.
