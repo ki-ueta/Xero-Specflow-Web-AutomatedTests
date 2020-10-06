@@ -20,3 +20,5 @@
    - Logging 
    - For multiple scenarios/features, reusing opened browsers.
    - Dispose all orphaned browsers
+ - Source code
+   - No comments in commited changes since no other contributors and there will be no more changes in the future.
