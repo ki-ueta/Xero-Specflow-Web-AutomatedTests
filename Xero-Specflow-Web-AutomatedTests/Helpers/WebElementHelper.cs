@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace Xero.Specflow.Helpers
 {
@@ -26,6 +22,24 @@ namespace Xero.Specflow.Helpers
             }
         }
 
+        //this will wait for the element to be visible until a timeout is reached
+        public static IWebElement WaitUntilElementVisible(IWebDriver driver, By elementLocator, int timeout = 10)
+        {
+            try
+            {
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
+                return wait.Until(ExpectedConditions.ElementIsVisible(elementLocator));
+            }
+            catch (NoSuchElementException)
+            {
+                Console.WriteLine("Element with locator: '" + elementLocator +
+                                  "' was not found in current context page.");
+                throw;
+            }
+        }
+
+
+        // This will click an element and wait until a page is loaded
         public static void ClickAndWaitForPageToLoad(IWebDriver driver, By elementLocator, int timeout = 10)
         {
             try

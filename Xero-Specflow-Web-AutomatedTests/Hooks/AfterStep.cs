@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using OpenQA.Selenium;
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using Xero.Specflow.Drivers;
+using Xero.Specflow.Infrastructure;
 
 namespace Xero.Specflow.Hooks
 {
@@ -20,7 +17,7 @@ namespace Xero.Specflow.Hooks
             _browserDriver = browserDriver;
         }
 
-        [AfterStep()]
+        [AfterStep]
         public void MakeScreenshotAfterStep()
         {
             if (_browserDriver.Current is ITakesScreenshot takesScreenshot)
@@ -29,7 +26,7 @@ namespace Xero.Specflow.Hooks
                 var tempFileName = Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileNameWithoutExtension(Path.GetTempFileName())) + ".png";
                 screenshot.SaveAsFile(tempFileName, ScreenshotImageFormat.Png);
 
-                Console.WriteLine($"SCREENSHOT[ {tempFileName} ]SCREENSHOT");
+                Console.WriteLine($"SCREENSHOT[ {tempFileName} ]");
             }
         }
     }

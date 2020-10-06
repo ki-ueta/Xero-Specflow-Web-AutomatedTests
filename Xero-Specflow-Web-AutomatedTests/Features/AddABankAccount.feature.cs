@@ -93,13 +93,13 @@ namespace Xero.Specflow.Features
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("add a bank account")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("add a ANZ-NZ bank account")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Add a Bank Account")]
-        public virtual void AddABankAccount()
+        public virtual void AddAANZ_NZBankAccount()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("add a bank account", null, tagsOfScenario, argumentsOfScenario);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("add a ANZ-NZ bank account", null, tagsOfScenario, argumentsOfScenario);
 #line 6
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -124,7 +124,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.Given("I successfully log in", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 8
- testRunner.When("I add a bank account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I add an ANZ(NZ) bank account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 9
  testRunner.Then("a new bank account is recorded in the system", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Polly;
+using System;
 using System.Threading;
-using System.Threading.Tasks;
-using Polly;
 
 namespace Xero.Specflow.Helpers
 {
@@ -17,7 +13,6 @@ namespace Xero.Specflow.Helpers
                 {
                     Thread.Sleep(1000);
                 });
-
 
             retryPolicy.Execute(func);
         }

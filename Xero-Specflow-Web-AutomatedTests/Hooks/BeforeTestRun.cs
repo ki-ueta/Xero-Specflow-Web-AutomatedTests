@@ -14,24 +14,17 @@ using Xero.Specflow.Drivers.Interfaces;
 namespace Xero.Specflow.Hooks
 {
     [Binding]
-    public class BeforeScenario
+    public class BeforeTestRun
     {
-        private readonly TestContext _testContext;
-
-        public BeforeScenario(TestContext testContext)
-        {
-            _testContext = testContext;
-        }
-
-        [BeforeScenario(Order = 1)]
-        public void RegisterDependencies(IObjectContainer objectContainer)
+        [BeforeTestRun (Order = 1)]
+        public static void RegisterDependencies(IObjectContainer objectContainer)
         {
             IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile(Path.Combine(BaseTestContext.TestDirectory, "appsettings.json"), optional: true, reloadOnChange: true)
+                .AddJsonFile(Path.Combine(TestContext.TestDirectory, "appsettings.json"), optional: true, reloadOnChange: true)
                 .Build();
 
             objectContainer.RegisterInstanceAs(config);
-            _testContext.Configuration = config;
+            TestContext.Configuration = config;
 
             objectContainer.RegisterTypeAs<LoginDriver, ILoginDriver>();
             objectContainer.RegisterTypeAs<DashboardDriver, IDashboardDriver>();

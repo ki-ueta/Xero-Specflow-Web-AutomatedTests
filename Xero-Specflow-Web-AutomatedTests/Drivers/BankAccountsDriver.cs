@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
-using Xero.Specflow.Contexts;
 using Xero.Specflow.Drivers.Interfaces;
 using Xero.Specflow.Drivers.PageObjects;
+using Xero.Specflow.Infrastructure;
 
 namespace Xero.Specflow.Drivers
 {
@@ -14,22 +14,20 @@ namespace Xero.Specflow.Drivers
             _browserDriver = browserDriver;
         }
 
-        public void AddANewBankAccount(string accountName)
+        public void AddANewBankAccount(string bankName, string accountName,string accountNumber)
         {
             var bankAccountsPageObjects = new BankAccountsPageObjects(_browserDriver.Current);
-            bankAccountsPageObjects.ClickAddBankAccount();
+            bankAccountsPageObjects.ClickAddBankAccountButton();
 
             var addBankAccountPage = new AddBankAccountsPageObjects(_browserDriver.Current);
-            addBankAccountPage.FillInNewAccountDetails(accountName);
+            addBankAccountPage.FillInNewAccountDetails(bankName,accountName,accountNumber);
         }
 
-        public void AssertNewAccount(string accountName)
+        public void AssertNewBankAccount(string accountName)
         {
             var bankAccountsPageObjects = new BankAccountsPageObjects(_browserDriver.Current);
-            bankAccountsPageObjects.NotificationBanner.Displayed.Should().Be(true);
-            bankAccountsPageObjects.NotificationBanner.Text.Should().MatchRegex($".{accountName} has been added.");
+            bankAccountsPageObjects.NotificationBanner().Text.Should().ContainEquivalentOf($"{accountName} has been added");
             bankAccountsPageObjects.BankAccounts.Should().ContainSingle(account => account.Text.Contains(accountName));
         }
-
     }
 }

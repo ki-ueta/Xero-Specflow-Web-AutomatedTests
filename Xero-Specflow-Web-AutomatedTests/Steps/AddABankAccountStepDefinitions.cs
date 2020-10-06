@@ -1,49 +1,51 @@
-﻿using System;
-using TechTalk.SpecFlow;
+﻿using TechTalk.SpecFlow;
 using Xero.Specflow.Contexts;
-using Xero.Specflow.Drivers;
 using Xero.Specflow.Drivers.Interfaces;
+using Xero.Specflow.Helpers.TestData;
 
 namespace Xero.Specflow.Steps
 {
     [Binding]
     public class AddABankAccountStepDefinitions
     {
-        private string accountName;
+        private string _accountName;
+        private string _accountNumber;
 
         private readonly ILoginDriver _loginDriver;
-        private readonly TestContext _testContext;
+        private readonly TestRunContext _testRunContext;
         private readonly IDashboardDriver _dashboardDriver;
         private readonly IBankAccountsDriver _bankAccountsDriver;
 
-        public AddABankAccountStepDefinitions( ILoginDriver loginDriver, TestContext testContext, IDashboardDriver dashboardDriver, IBankAccountsDriver bankAccountsDriver)
+        public AddABankAccountStepDefinitions( ILoginDriver loginDriver, TestRunContext testRunContext, IDashboardDriver dashboardDriver, IBankAccountsDriver bankAccountsDriver)
         {
             _loginDriver = loginDriver;
-            _testContext = testContext;
+            _testRunContext = testRunContext;
             _dashboardDriver = dashboardDriver;
             _bankAccountsDriver = bankAccountsDriver;
-
-            accountName = $"ANZ-{Guid.NewGuid().ToString().Substring(0,26)}";
         }
 
         [Given(@"I successfully log in")]
         public void GivenISuccessfullyLogIn()
         {
-            _loginDriver.Login(_testContext.Username, _testContext.Password);
+            _loginDriver.Login(_testRunContext.Username, _testRunContext.Password);
         }
 
-        [When(@"I add a bank account")]
-        public void WhenIClick()
+        [When(@"I add (a|an) (.*) bank account")]
+        public void WhenIAddABankAccount(string article, string bankName)
         {
+            // TODO alternatively, can navigate to bank account page using URL
             _dashboardDriver.SelectBankAccountMenu();
 
-            _bankAccountsDriver.AddANewBankAccount(accountName);
+            _accountName = BankAccountDataHelper.GetAccountNameFromBankName(bankName);
+            _accountNumber = BankAccountDataHelper.GetDefaultAccountNumberByBankName(bankName);
+            _bankAccountsDriver.AddANewBankAccount(bankName,_accountName,_accountNumber);
+
         }
 
         [Then(@"a new bank account is recorded in the system")]
         public void ThenANewBankAccountIsAddedOnBankAccountsPage()
         {
-            _bankAccountsDriver.AssertNewAccount(accountName);
+            _bankAccountsDriver.AssertNewBankAccount(_accountName);
         }
 
     }

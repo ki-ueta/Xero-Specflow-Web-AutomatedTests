@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Support.UI;
 using Xero.Specflow.Helpers;
 
 namespace Xero.Specflow.Drivers.PageObjects
@@ -15,9 +9,9 @@ namespace Xero.Specflow.Drivers.PageObjects
     {
         private readonly IWebDriver _webDriver;
 
-        private By ANZdropdownByXPath = By.XPath(@"//li[text()=""ANZ (NZ)""]");
-        private By ContinueButtonById = By.Id("common-button-submit-1015-btnInnerEl");
-        private By AccountNameTextBoxById = By.Id("accountname-1037-inputEl");
+        private readonly By _anzDropdownByXPath = By.XPath(@"//li[text()=""ANZ (NZ)""]");
+        private readonly By _continueButtonById = By.Id("common-button-submit-1015-btnInnerEl");
+        private readonly By _accountNameTextBoxById = By.Id("accountname-1037-inputEl");
 
         public AddBankAccountsPageObjects(IWebDriver webDriver)
         {
@@ -27,21 +21,60 @@ namespace Xero.Specflow.Drivers.PageObjects
         public IWebElement AccountTypeDropdownBox => _webDriver.FindElement(By.Id("accounttype-1039-trigger-picker"));
         public IWebElement AccountNumberTextBox => _webDriver.FindElement(By.Id("accountnumber-1068-inputEl"));
 
-        public void FillInNewAccountDetails(string accountName)
+        public void SelectBankName(string bankName)
         {
-            WebElementHelper.WaitUntilElementClickable(_webDriver, ANZdropdownByXPath);
-            WebElementHelper.ClickAndWaitForPageToLoad(_webDriver, ANZdropdownByXPath);
+            By elementLocator;
 
-            WebElementHelper.WaitUntilElementClickable(_webDriver, AccountNameTextBoxById).SendKeys(accountName);
+            // TODO support other banks
+            switch (bankName)
+            {
+                case "ANZ(NZ)": elementLocator = _anzDropdownByXPath;
+                    break;
+                default: throw new NotSupportedException("not supported bank: <null>");
+            }
 
+            WebElementHelper.WaitUntilElementClickable(_webDriver, elementLocator);
+            WebElementHelper.ClickAndWaitForPageToLoad(_webDriver, elementLocator);
+        }
+
+        public void InputAccountName(string accountName)
+        {
+            WebElementHelper.WaitUntilElementClickable(_webDriver, _accountNameTextBoxById).SendKeys(accountName);
+        }
+
+        public void SelectDefaultAccountType()
+        {
+            // TODO support other account type
             AccountTypeDropdownBox.Click();
+            // select the first displayed account type in the dropdown box.
             new Actions(_webDriver).SendKeys(Keys.Tab).Perform();
+        }
 
-            AccountNumberTextBox.SendKeys("01-5011-0345678-000");
+        public void InputAccountNumber(string accountNumber)
+        {
+            AccountNumberTextBox.SendKeys(accountNumber);
+            // select the first displayed account type in the dropdown box.
+            new Actions(_webDriver).SendKeys(Keys.Tab).Perform();
+        }
 
+        public void ClickSubmitButton()
+        {
+            WebElementHelper.WaitUntilElementVisible(_webDriver, _continueButtonById);
+            WebElementHelper.WaitUntilElementClickable(_webDriver, _continueButtonById);
+            WebElementHelper.ClickAndWaitForPageToLoad(_webDriver, _continueButtonById);
+        }
 
-            WebElementHelper.WaitUntilElementClickable(_webDriver, ContinueButtonById);
-            WebElementHelper.ClickAndWaitForPageToLoad(_webDriver, ContinueButtonById);
+        public void FillInNewAccountDetails(string bankName, string accountName, string accountNumber)
+        {
+            SelectBankName(bankName);
+
+            InputAccountName(accountName);
+
+            SelectDefaultAccountType();
+             
+            InputAccountNumber(accountNumber);
+
+            ClickSubmitButton();
         }
     }
 }

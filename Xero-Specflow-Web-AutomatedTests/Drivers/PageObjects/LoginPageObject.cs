@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using Xero.Specflow.Helpers;
 
 namespace Xero.Specflow.Drivers.PageObjects
@@ -12,23 +7,27 @@ namespace Xero.Specflow.Drivers.PageObjects
     {
         private readonly IWebDriver _webDriver;
 
+        private readonly By _submitButtonById = By.Id("submitButton");
+
         public LoginPageObject(IWebDriver webDriver)
         {
             _webDriver = webDriver;
         }
 
-        public IWebElement usernameTextBox => _webDriver.FindElement(By.Id("email"));
-        public IWebElement passwordTextBox => _webDriver.FindElement(By.Id("password"));
-        public IWebElement submitButton => _webDriver.FindElement(By.Id("submitButton"));
+        public IWebElement UsernameTextBox => _webDriver.FindElement(By.Id("email"));
+        public IWebElement PasswordTextBox => _webDriver.FindElement(By.Id("password"));
+
+        public void ClickSubmitButton()
+        {
+            WebElementHelper.ClickAndWaitForPageToLoad(_webDriver, _submitButtonById);
+        }
 
         public void LogIn(string username, string password)
         {
-            usernameTextBox.SendKeys(username);
-            passwordTextBox.SendKeys(password);
+            UsernameTextBox.SendKeys(username);
+            PasswordTextBox.SendKeys(password);
 
-            submitButton.Submit();
-
-            RetryHelper.WaitFor(() => _webDriver.Url.EndsWith("/Dashboard"));
+            ClickSubmitButton();
         }
     }
 }

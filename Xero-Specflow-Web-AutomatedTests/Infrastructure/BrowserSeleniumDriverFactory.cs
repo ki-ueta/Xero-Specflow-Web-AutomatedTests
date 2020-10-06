@@ -1,19 +1,18 @@
-﻿using OpenQA.Selenium;
+﻿using System;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.IE;
-using System;
 using Xero.Specflow.Contexts;
 
-namespace Xero.Specflow.Drivers
+namespace Xero.Specflow.Infrastructure
 {
     public class BrowserSeleniumDriverFactory
     {
-        private readonly TestContext _testContext;
+        private readonly TestRunContext _testRunContext;
 
-        public BrowserSeleniumDriverFactory(TestContext testContext)
+        public BrowserSeleniumDriverFactory(TestRunContext testRunContext)
         {
-            _testContext = testContext;
+            _testRunContext = testRunContext;
         }
 
         public IWebDriver GetForBrowser(string browserId)
@@ -31,17 +30,21 @@ namespace Xero.Specflow.Drivers
 
         private IWebDriver GetFirefoxDriver()
         {
-            var firefoxDriverService = FirefoxDriverService.CreateDefaultService(BaseTestContext.TestDirectory);
+            var firefoxDriverService = FirefoxDriverService.CreateDefaultService(TestContext.TestDirectory);
+            firefoxDriverService.FirefoxBinaryPath = _testRunContext.FirefoxBinaryPath;
+            // TODO add required browser options to make it consistent
+
             return new FirefoxDriver(firefoxDriverService)
             {
-                Url = _testContext.Hostname,
+                Url = _testRunContext.Hostname,
             };
         }
 
         private IWebDriver GetChromeDriver(bool isHeadless)
         {
-            var chromeDriverService = ChromeDriverService.CreateDefaultService(BaseTestContext.TestDirectory);
+            var chromeDriverService = ChromeDriverService.CreateDefaultService(TestContext.TestDirectory);
 
+            // TODO add required browser options to make it consistent
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddArgument("--start-maximized");
             chromeOptions.AddArgument("--disable-notifications");
@@ -53,22 +56,10 @@ namespace Xero.Specflow.Drivers
 
             var chromeDriver = new ChromeDriver(chromeDriverService, chromeOptions)
             {
-                Url = _testContext.Hostname
+                Url = _testRunContext.Hostname
             };
 
             return chromeDriver;
-        }
-
-        private IWebDriver GetInternetExplorerDriver()
-        {
-            var internetExplorerOptions = new InternetExplorerOptions
-            {
-                IgnoreZoomLevel = true,
-            };
-            return new InternetExplorerDriver(InternetExplorerDriverService.CreateDefaultService(BaseTestContext.TestDirectory), internetExplorerOptions)
-            {
-                Url = _testContext.Hostname,
-            };
         }
     }
 }

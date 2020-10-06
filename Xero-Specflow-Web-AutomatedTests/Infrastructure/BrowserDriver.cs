@@ -1,42 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using Xero.Specflow.Contexts;
+using Xero.Specflow.Drivers;
 using Xero.Specflow.Helpers;
 
-namespace Xero.Specflow.Drivers
+namespace Xero.Specflow.Infrastructure
 {
     public class BrowserDriver : IDisposable
     {
         private readonly BrowserSeleniumDriverFactory _browserSeleniumDriverFactory;
         private readonly Lazy<IWebDriver> _currentWebDriverLazy;
-        private readonly TestContext _testContext;
-        private readonly Lazy<WebDriverWait> _waitLazy;
-        private readonly TimeSpan _waitDuration = TimeSpan.FromSeconds(10);
+        private readonly TestRunContext _testRunContext;
+        private readonly TimeSpan _waitDuration;
         private bool _isDisposed;
 
-        public BrowserDriver(BrowserSeleniumDriverFactory browserSeleniumDriverFactory, TestContext testContext)
+        public BrowserDriver(BrowserSeleniumDriverFactory browserSeleniumDriverFactory, TestRunContext testRunContext)
         {
             _browserSeleniumDriverFactory = browserSeleniumDriverFactory;
-            _testContext = testContext;
+            _testRunContext = testRunContext;
             _currentWebDriverLazy = new Lazy<IWebDriver>(GetWebDriver);
-            _waitLazy = new Lazy<WebDriverWait>(GetWebDriverWait);
+            _waitDuration = testRunContext.Timeout;
         }
 
         public IWebDriver Current => _currentWebDriverLazy.Value;
-
-        private WebDriverWait GetWebDriverWait()
-        {
-            return new WebDriverWait(Current, _waitDuration);
-        }
-
+        
         private IWebDriver GetWebDriver()
         {
-            return _browserSeleniumDriverFactory.GetForBrowser(_testContext.Browser);
+            return _browserSeleniumDriverFactory.GetForBrowser(_testRunContext.Browser);
         }
 
         public void Dispose()
@@ -58,7 +49,7 @@ namespace Xero.Specflow.Drivers
         {
             if (!Current.Url.EndsWith(urlPart))
             {
-                Current.Navigate().GoToUrl($"{_testContext.Hostname}/{urlPart}");
+                Current.Navigate().GoToUrl($"{_testRunContext.Hostname}/{urlPart}");
                 RetryHelper.WaitFor(() => Current.Url.EndsWith(urlPart));
             }
         }
